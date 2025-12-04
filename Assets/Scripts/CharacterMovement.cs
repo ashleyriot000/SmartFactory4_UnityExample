@@ -67,6 +67,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if(!_isMoving)
         {
+            //여기 부분 코드를 이렇게 수정할 것. 
             transform.rotation *= _animator.deltaRotation;
         }
         
