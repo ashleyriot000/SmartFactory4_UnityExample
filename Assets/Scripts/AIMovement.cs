@@ -46,6 +46,9 @@ public class AIMovement : MonoBehaviour
     //폭발 공격력
     public int explosionDamage = 1;
 
+    [Header("UI")]
+    public AIUI ui;
+
 
     //왼쪽으로 회전하는 중인가
     private bool _isLeft = false;

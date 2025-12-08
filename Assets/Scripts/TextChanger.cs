@@ -4,9 +4,12 @@ using UnityEngine.UI;
 public class TextChanger : MonoBehaviour
 {
     public Text uiText;
+    public Text uiTextClone;
     public Text stopText;
+    public Text stopTextClone;
     public Button stopButton;
 
+    private float _startedTime = 0f;
 
     private void Start()
     {
@@ -35,17 +38,23 @@ public class TextChanger : MonoBehaviour
     {
         if (!_isStarted)
             return;
-
-        uiText.text = Time.time.ToString();
+        
+        uiTextClone.text = uiText.text = (Time.time - _startedTime).ToString();
     }
 
     public void Stop()
     {
-        stopText.text = Time.time.ToString();
+        if (!_isStarted)
+        {
+            //stopTextClone.text = stopText.text = "0";
+            return;
+        }
+        stopTextClone.text = stopText.text = (Time.time - _startedTime).ToString();
     }
 
     public void StartButton()
     {
         _isStarted = true;
+        _startedTime = Time.time;
     }
 }
