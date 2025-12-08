@@ -35,6 +35,8 @@ public class PointerReacter : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+        triangle.position = pos;
         triangle.gameObject.SetActive(true);
         triangle.DOScale(size, duration);
     }
@@ -44,38 +46,5 @@ public class PointerReacter : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         triangle.DOScale(Vector3.zero, duration)
             .OnComplete(() => triangle.gameObject.SetActive(false));
     }
-
-    //public Color enterColor;
-    //public MeshRenderer meshRenderer;
-    //public float duration = 1f;
-    //public Ease easingType = Ease.Linear;
-
-    //private Color originColor;
-
-    //private void Start()
-    //{
-    //    meshRenderer = GetComponent<MeshRenderer>();
-    //    originColor = meshRenderer.material.color;
-    //}
-
-
-    //Tween _currentTween;
-    //public void OnPointerClick(PointerEventData eventData)
-    //{
-
-    //}
-
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    meshRenderer.material.DOColor(enterColor, duration)
-    //        .SetEase(easingType)
-    //        .SetLoops(-1, LoopType.Yoyo);
-    //}
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    meshRenderer.material.DOKill();
-    //    meshRenderer.material.color = originColor;
-    //}
 
 }
