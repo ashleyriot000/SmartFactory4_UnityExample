@@ -93,6 +93,11 @@ public class AIMovement : MonoBehaviour
         //시작시 AI 에이전트 미리 캐싱해놓는다.
         agent = GetComponent<NavMeshAgent>();
 
+        //월드 캔버스를 찾아내서 UI 초기화할 때 파라메터로 넘긴다.
+        GameObject go = GameObject.Find("Canvas_World");
+        //AIUI의 초기화 함수 Init(카메라의 위치정보, 로봇 자신의 위치정보, 캔버스의 위치정보);
+        ui.Init(Camera.main.transform, transform, go.transform);
+
         switch (currentState)
         {
             case MoveState.Watching:
@@ -133,6 +138,9 @@ public class AIMovement : MonoBehaviour
         agent.updatePosition = false;
         agent.updateRotation = false;
         currentState = MoveState.Watching;
+
+        //모드가 변경될 때마다 UI에게 알림.
+        ui.ChangeMode(currentState);
     }
 
     private void Watch()
@@ -176,6 +184,8 @@ public class AIMovement : MonoBehaviour
         _waitTime = Time.time + interval;
         //추적 만료 시간을 설정한다.
         _tracingExitTime = Time.time + maxTracingDuration;
+        //모드가 변경될 때마다 UI에게 알림.
+        ui.ChangeMode(currentState);
     }
 
     //추적하는 함수
@@ -187,6 +197,9 @@ public class AIMovement : MonoBehaviour
             SetReturnMode();
             return;
         }
+
+        float remain = _tracingExitTime - Time.time;
+        ui.ChangeRemain(remain, remain / maxTracingDuration);
 
         //폭발 가능거리까지 접근했는지 확인해 자폭한다.
         if(distance < explosionDistance)
@@ -213,6 +226,7 @@ public class AIMovement : MonoBehaviour
         }
 
         Destroy(gameObject);
+        ui.Die();
     }
 
     //리턴모드로 전환하는 함수
@@ -226,6 +240,9 @@ public class AIMovement : MonoBehaviour
 
         //감시 지역으로 목적지를 설정한다.
         agent.SetDestination(watchPoint.position);
+
+        //모드가 변경될 때마다 UI에게 알림.
+        ui.ChangeMode(currentState);
     }    
 
     //리턴모드
