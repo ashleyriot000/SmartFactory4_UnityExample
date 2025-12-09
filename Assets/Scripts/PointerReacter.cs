@@ -13,6 +13,7 @@ public class PointerReacter : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public Vector3 size = Vector3.one;
 
     private Color _originColor;
+    private bool _isUIDisplayed = false;
 
     private void Start()
     {
@@ -35,16 +36,35 @@ public class PointerReacter : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        //카메라 기준으로 월드의 좌표를 스크린좌표로 변환하는 함수.
         Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
         triangle.position = pos;
         triangle.gameObject.SetActive(true);
         triangle.DOScale(size, duration);
+
+        _isUIDisplayed = true;
     }
 
     public void Close()
     {
         triangle.DOScale(Vector3.zero, duration)
-            .OnComplete(() => triangle.gameObject.SetActive(false));
+            //.OnComplete(() => triangle.gameObject.SetActive(false));
+            .OnComplete(UIDisable);
+
+        _isUIDisplayed = false;
+    }
+
+    private void UIDisable()
+    {
+        triangle.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (triangle == null || !_isUIDisplayed)
+            return;
+
+        triangle.position = Camera.main.WorldToScreenPoint(transform.position);
     }
 
 }
